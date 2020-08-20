@@ -16,10 +16,10 @@ cv19_data = json.loads(r.text)
 """ Helper functions """
 def plot_field_rolling_n_day_avg(dataset_or_country_code, n, field_names):
     FIELD_LEGEND_MAPPING = {
-        'new_cases': " - New Cases",
-        'new_deaths': " - New Deaths",
-        'new_cases_per_million': " - New Cases per million",
-        'new_deaths_per_million': " - New Deaths per million",
+        'new_cases': "New Cases",
+        'new_deaths': "New Deaths",
+        'new_cases_per_million': "New Cases per million",
+        'new_deaths_per_million': "New Deaths per million",
     }
     datasets = []
 
@@ -43,8 +43,12 @@ def plot_field_rolling_n_day_avg(dataset_or_country_code, n, field_names):
             rolling_average.append(roll_avg_item)
         for field_name in field_names:
            plt.plot([item.get('date') for item in rolling_average], [item.get(field_name) for item in rolling_average])
-           legends.append([country_name + FIELD_LEGEND_MAPPING.get(field_name, '- UNKNOWN')])
+           legends.append([country_name])
+    title = '/'.join([FIELD_LEGEND_MAPPING[f_name] for f_name in field_names])
+    if n > 1:
+        title += " (Rolling {} day average)".format(n)
     plt.legend(legends)
+    plt.title(title)
     # Handle max number of value displayed on X axis
     ax = plt.gca()
     ax.xaxis.set_major_locator(plt.MaxNLocator(len(rolling_average) // 15))
